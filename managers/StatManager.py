@@ -19,6 +19,7 @@ class StatManager:
         self.TotalSold = np.zeros(self.nProducts)
         self.TotalScrapped = np.zeros(self.nProducts)
         self.TotalUnmetDemand = 0
+        self.TotalRevenue = 0
         self.TimeHorizon = 0 # to be set separately
         self.myClock = 0
 
@@ -58,10 +59,23 @@ class StatManager:
         if (self.myClock >= self.FirstTimeBucket) and (self.myClock <= self.LastTimeBucket):
             self.TotalOrdered += Ordered
             self.TotalScrapped += Scrapped
-            self.TotalSold[prod] += Sales
-            return Sales * self.DataStruct.SellingPriceA + Scrapped * self.DataStruct.MarkdownPriceA - Ordered * self.DataStruct.PurchaseCostA
+            #
+            SalesSums = np.zeros(self.nProducts)
+            Revenue = 0
+            for i,k in enumerate(self.prod_setting.keys()):
+                #Aggregation of the sales per product
+                SalesSums[i] = sum(Sales.get(k))
+                #The revenue uses disaggregated sales instead
+                Revenue += sum(np.array(self.prod_setting.get(k)['P'])*np.array(Sales.get(k))) + self.prod_setting.get(k)['MD']*Scrapped[i] - self.prod_setting.get(k)['C']*Ordered[i]
+            self.TotalSold += SalesSums
+            self.TotalRevenue += Revenue
+
+            return Revenue
         else:
             return 0 # to return a reward for the first time-bucket
+
+
+    #########TODO: from here
             
     # the unmet demand cannot be separated by products if the stock-out substitution happens
     def updateUnmet(self,unmetDemand):
