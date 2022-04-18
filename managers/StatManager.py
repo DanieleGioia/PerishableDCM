@@ -19,6 +19,7 @@ class StatManager:
         self.TotalSold = np.zeros(self.nProducts)
         self.TotalScrapped = np.zeros(self.nProducts)
         self.TotalUnmetDemand = 0
+        self.TotalLostDemand = 0
         self.TotalProfit = 0
         self.TimeHorizon = 0 # to be set separately
         self.myClock = 0
@@ -27,6 +28,7 @@ class StatManager:
     def clearStatistics(self):
         self.myClock = 0
         self.TotalUnmetDemand = 0
+        self.TotalLostDemand = 0
         self.TotalOrdered = np.zeros(self.nProducts)
         self.TotalSold = np.zeros(self.nProducts)
         self.TotalScrapped = np.zeros(self.nProducts)
@@ -57,6 +59,8 @@ class StatManager:
         Ordered must be an array with size number of products. It is updated according to a daily stepsize
         Scrapped must be an array with size number of products. It is updated according to a daily stepsize
         Sales must contain the age information. It is assumed as a dictionary of np.arrays, consistently with the prod_settings ones.
+
+        Notice that the prod_setting has prices and quality ordered from the worst (oldest) to the best (newest)
         """
         if (self.myClock >= self.FirstTimeBucket) and (self.myClock <= self.LastTimeBucket):
             self.TotalOrdered += Ordered
@@ -76,9 +80,12 @@ class StatManager:
         else:
             return 0 # to return a reward for the first time-bucket
             
-    # the unmet demand cannot be separated by products if the stock-out substitution happens
-    def updateUnmet(self,unmetDemand):
+    # the unmet demand 
+    def updateUnmet(self,unmetDemand): #nothing offered to the client
         self.TotalUnmetDemand += unmetDemand
+    def updateLost(self,lostDemand): #we offered something to the client, but she bought nothing
+        self.TotalLostDemand += lostDemand
+
     #stats getters
     def getTotalSalvageValue(self):
         salvageValue = 0

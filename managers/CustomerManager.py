@@ -23,15 +23,21 @@ class CustomerManager:
             self.quality = 0
         else:
             raise ValueError("DCM not available")
-    #item choice
-    def makeChoice(self):
+    #item choice w.r.t. the shelf availability
+    def makeChoice(self,availability):
         if self.Type == 'LinearBeta':
-            if self.prices == 0 or self.quality == 0:
+            if type(self.prices) == int or type(self.quality) == int: #they are np.array when set
                 raise ValueError("Please set prices and quality for linear DCM")
-            if self.quality.size != self.prices.size:
+            #prices and quality of what is available
+            #they are multiplied by a boolean list 'availability', s.t. what is not available is set to 0
+            pricesAvailable = self.prices * availability
+            qualityAvailable = self.quality * availability
+            #price and quality check
+            if pricesAvailable .size != qualityAvailable.size:
                 raise ValueError('Price and quality size must coincide')
-            sample = np.random.beta(self.Alpha,self.Beta)
-            utilities = sample * self.quality - self.prices
+            #sampling of the consumer's utility 
+            sample = np.random.beta(self.alpha,self.beta)
+            utilities = sample * qualityAvailable - pricesAvailable
             #All negative?
             if any(utilities>0) :
                 return np.argmax(utilities) + 1
