@@ -5,11 +5,11 @@ import numpy as np
 
 class StatManager:
     #additional values for possible transient periods
-    #in the learning phases can be set. These are not implemented by now
-    Head = 0
-    Tail = 0
-    FirstTimeBucket = 1
-    LastTimeBucket = 1
+    #in the learning phases can be set.
+    Head = 0 #set by setter
+    Tail = 0 #set by setter
+    FirstTimeBucket = 1 #default
+    LastTimeBucket = 1 #default
     
     def __init__(self, prod_setting: dict):
         self.prod_setting = prod_setting

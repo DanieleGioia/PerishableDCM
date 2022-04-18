@@ -12,27 +12,34 @@ class CustomerManager:
 
     The constructor needs two vector with prices and quality of the same length
     """
-    #The basic customer cares only about the price
-    def __init__(self):
-        pass
-        # Make a choice, random policy
-    def makeChoice(self,prices):
-        return np.random.choice (range(prices.size+1)) #0 means no purchase
-
-class CustomerManagerLinear(CustomerManager):
-    def __init__(self, alpha, beta):
-        self.Alpha = alpha
-        self.Beta = beta
-        super().__init__()
-
-    def makeChoice(self,prices,quality):
-        if quality.size != prices.size:
-            raise ValueError('Price and quality size must coincide')
-        sample = np.random.beta(self.Alpha,self.Beta)
-        utilities = sample * quality - prices
-        #All negative?
-        if any(utilities>0) :
-            return np.argmax(utilities) + 1
+    def __init__(self,DCM_setting: dict):
+        self.Type = DCM_setting['Type']
+        if self.Type == 'LinearBeta':
+            self.alpha = DCM_setting['alpha']
+            self.beta = DCM_setting['beta']
+            #prices and quality are quantities required for this DCM.
+            #They must be set by the setters
+            self.prices = 0
+            self.quality = 0
         else:
-            return 0
+            raise ValueError("DCM not available")
+    #item choice
+    def makeChoice(self):
+        if self.Type == 'LinearBeta':
+            if self.prices == 0 or self.quality == 0:
+                raise ValueError("Please set prices and quality for linear DCM")
+            if self.quality.size != self.prices.size:
+                raise ValueError('Price and quality size must coincide')
+            sample = np.random.beta(self.Alpha,self.Beta)
+            utilities = sample * self.quality - self.prices
+            #All negative?
+            if any(utilities>0) :
+                return np.argmax(utilities) + 1
+        return 0 #no choice
+
+    #setters
+    def setPrices(self,prices: np.array):
+        self.prices = prices
+    def setQuality(self,quality: np.array ):
+        self.quality = quality
         
