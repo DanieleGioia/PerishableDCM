@@ -1,7 +1,7 @@
 from managers import *
+from envs import *
 import numpy as np
 import json
-import gym
 
 
 #output precision
@@ -19,26 +19,45 @@ fp.close()
 #Print flag
 flagPrint = True
 
+#######Inizialization
+
 #Scenarios initialization
-ScenarioMgr = ScenarioGeneratorRandom(store_setting)
-ScenarioMgr.reset() #called just after to set the seed 
+scenarioMgr = ScenarioGeneratorRandom(store_setting)
+scenarioMgr.reset() #called just after to set the seed 
 #Related time horizon of the simulation
-TransientWeeks = 0
-LearnWeeks = 60 #number of weeks emplyoed to learn a policy
-TimeHorizonLearn = 7*LearnWeeks #time horizon in days
+transientWeeks = 0
+learnWeeks = 60 #number of weeks emplyoed to learn a policy
+testWeeks = 600
+timeHorizonLearn = 7*learnWeeks #time horizon in days
+timeHorizonTest = 7*testWeeks #time horizon in days
 #Invetory managers, one per product
-InvManagers = {}
+invManagers = {}
 for k in prod_setting.keys():
-    InvManagers[k] = InventoryManager(prod_setting.get(k)['SL'])
+    invManagers[k] = InventoryManager(prod_setting.get(k)['SL'])
 #Supply managers, one per product
-SupManagers = {}
+supManagers = {}
 for k in prod_setting.keys():
-    InvManagers[k] = SupplyManager(prod_setting.get(k)['LT'])
+    supManagers[k] = SupplyManager(prod_setting.get(k)['LT'])
 
 #StatManager
-StatMgr = StatManager(prod_setting)
-StatMgr.setTimeHorizon(TimeHorizonLearn)
-StatMgr.setHeadTail(TransientWeeks,0) #no tails
+statMgr = StatManager(prod_setting)
+statMgr.setHeadTail(transientWeeks,0) #no tails
 
 #Consumers (Linear with beta)
-Consumer = CustomerManager(store_setting['DCM']) 
+consumer = CustomerManager(store_setting['DCM']) 
+#Prices and Qualities setting
+prices = []
+qualities = []
+for k in prod_setting.keys():
+    prices.extend(prod_setting.get(k)['P'])
+    qualities.extend(prod_setting.get(k)['Q'])
+consumer.setPrices(np.array(prices))
+consumer.setQuality(np.array(qualities))
+
+#######Inizialization - end
+
+
+#####
+# Sequential-env with daily dependent actions 
+#####
+env = DailySimulation(scenarioMgr,timeHorizonLearn,invManagers,supManagers,statMgr,consumer)
