@@ -19,7 +19,7 @@ class StatManager:
         self.TotalSold = np.zeros(self.nProducts)
         self.TotalScrapped = np.zeros(self.nProducts)
         self.TotalUnmetDemand = 0
-        self.TotalRevenue = 0
+        self.TotalProfit = 0
         self.TimeHorizon = 0 # to be set separately
         self.myClock = 0
 
@@ -29,13 +29,15 @@ class StatManager:
         self.TotalUnmetDemand = 0
         self.TotalOrdered = np.zeros(self.nProducts)
         self.TotalSold = np.zeros(self.nProducts)
-        self.Scrapped = np.zeros(self.nProducts)
+        self.TotalScrapped = np.zeros(self.nProducts)
+        self.TotalProfit = 0
     
     #Set time horizon
     def setTimeHorizon(self, TimeHorizon):
         self.TimeHorizon = TimeHorizon
         self.FirstTimeBucket = self.Head + 1
         self.LastTimeBucket = TimeHorizon - self.Tail
+        self.activeTimeHorizon = (self.TimeHorizon - self.Tail - self.Head)
         
     #Set transient Head and Tail to discard in computing statistics
     def setHeadTail(self, Head, Tail):
@@ -61,40 +63,43 @@ class StatManager:
             self.TotalScrapped += Scrapped
             #
             SalesSums = np.zeros(self.nProducts)
-            Revenue = 0
+            Profit = 0
             for i,k in enumerate(self.prod_setting.keys()):
                 #Aggregation of the sales per product
                 SalesSums[i] = sum(Sales.get(k))
-                #The revenue uses disaggregated sales instead
-                Revenue += sum(np.array(self.prod_setting.get(k)['P'])*np.array(Sales.get(k))) + self.prod_setting.get(k)['MD']*Scrapped[i] - self.prod_setting.get(k)['C']*Ordered[i]
+                #The Profit uses disaggregated sales instead
+                Profit += sum(np.array(self.prod_setting.get(k)['P'])*np.array(Sales.get(k))) + self.prod_setting.get(k)['MD']*Scrapped[i] - self.prod_setting.get(k)['C']*Ordered[i]
             self.TotalSold += SalesSums
-            self.TotalRevenue += Revenue
+            self.TotalProfit += Profit
 
-            return Revenue
+            return Profit
         else:
             return 0 # to return a reward for the first time-bucket
-
-
-    #########TODO: from here
             
     # the unmet demand cannot be separated by products if the stock-out substitution happens
     def updateUnmet(self,unmetDemand):
         self.TotalUnmetDemand += unmetDemand
     #stats getters
     def getTotalSalvageValue(self):
-        return self.TotalScrappedA * self.DataStruct.MarkdownPriceA + self.TotalScrappedB * self.DataStruct.MarkdownPriceB
+        salvageValue = 0
+        for i,k in enumerate(self.prod_setting.keys()):
+            salvageValue += self.prod_seting.get(k)['MD']*self.TotalScrapped[i]
+        return salvageValue
     def getTotalRevenue(self):
-        if self.DataStruct.DiscountB:
-            return self.TotalSoldA * self.DataStruct.SellingPriceA + self.TotalSoldB * self.DataStruct.SellingPriceB + self.TotalSoldBdisc * self.DataStruct.DiscountPB
-        else:
-            return self.TotalSoldA * self.DataStruct.SellingPriceA + self.TotalSoldB * self.DataStruct.SellingPriceB
+        revenue = 0
+        for i,k in enumerate(self.prod_setting.keys()):
+            revenue += self.prod_seting.get(k)['P']*self.TotalSold[i]
+        return revenue
     def getTotalPurchaseCost(self):
-        return self.TotalOrderedA * self.DataStruct.PurchaseCostA + self.TotalOrderedB * self.DataStruct.PurchaseCostB
+        purchaseCost = 0
+        for i,k in enumerate(self.prod_setting.keys()):
+            purchaseCost += self.prod_seting.get(k)['C']*self.TotalOrdered[i]
+        return purchaseCost
     #Main performance metrics
     def getAverageProfit(self):
-        return (self.getTotalRevenue() + self.getTotalSalvageValue() - self.getTotalPurchaseCost()) / (self.TimeHorizon - self.Tail - self.Head)
+        return self.TotalProfit / self.activeTimeHorizon
     def getAverageScrapped(self):
-        return (self.TotalScrappedA + self.TotalScrappedB )/ (self.TimeHorizon - self.Tail - self.Head)
+        return sum(self.TotalScrapped)/ self.activeTimeHorizon
         
 ######
 #####
