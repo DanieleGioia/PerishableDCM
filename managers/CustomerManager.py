@@ -40,8 +40,8 @@ class CustomerManager:
             utilities = sample * qualityAvailable - pricesAvailable
             #All negative?
             if any(utilities>0) :
-                return np.argmax(utilities) + 1
-        return 0 #no choice
+                return np.argmax(utilities)
+        return -1 #no choice
 
     #setters
     def setPrices(self,prices: np.array):

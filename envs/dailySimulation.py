@@ -29,7 +29,7 @@ class DailySimulation(gym.Env):
         self.scenario = self.scenarioMgr.makeScenario(self.timeHorizon)
         #oreder history, useful to study the shape of the policy per product
         self.history = {}
-        #cumulative sales per product
+        #sales per product per day
         self.sales = {}
         for k in self.invManagers.keys():
             self.history[k] = []
@@ -62,6 +62,7 @@ class DailySimulation(gym.Env):
         for i,k in enumerate(self.supManagers.keys()):
             self.supManagers.get(k).GetOrder(action[i])
             self.history.get(k).append(action[i])
+            self.sales[k] = 0 #sales of the previous day erased
         #update clock of the stats
         self.statMgr.updateClock()
 
@@ -89,8 +90,7 @@ class DailySimulation(gym.Env):
         for k in self.invManagers.keys():
             delivered = self.supManagers.get(k).deliverSupply()
             self.invManagers.get(k).receiveSupply(delivered)
-        #tmp array of the sold items per product and aggregated lost
-        soldItems = np.zeros(self.statMgr.nProducts)
+        #aggregated lost and unmet of the current day
         lostClients = 0 #we offered something to the client, but she bought nothing
         unmetClients = 0 #nothing offered to the client
 
@@ -108,14 +108,31 @@ class DailySimulation(gym.Env):
                 unmetClients += 1
             #Once the choice is made, this is what the store observes
             #here we update the inventory if a purchase happens
-            if choice == 0: #no purchase, no inventory update, lost sales
-                #it can be generalized in case of backloggig
-                    lostClients += 1 
+            if choice == -1: #no purchase, no inventory update, lost sales it can be generalized in case of backloggig
+                lostClients += 1 
             else: #the client purchased something we have to find the product key and the age of the item
                 productKey = self.statMgr.keys_list_age[choice]
                 inventoryMgr = self.invManagers[productKey]
-                #record the sale
+                #record the sale and update the inventory
+                #we also have to pass the age of the sold item
+                #concernig the same product, the highest is the index, the newest is the chosen item
+                #Let us define an array such that it is equal to the age of the item of a product w.r.t. the order of the array of the keys
+                #it is equals to the shelf life before the product key and equals to zero after that
+                ageArray = inventoryMgr.ShelfLife - np.cumsum(self.statMgr.keys_list_age == productKey)
+                self.sales[productKey] += inventoryMgr.meetDemand(ageArray[choice])
+        #retailer close, en of the day
+        #Update the inventory by scrapping and update the age of the residuals items
+        scrapped = np.zeros(self.statMgr.nProducts)
+        for i,k in enumerate(self.invManagers.keys()):
+            scrapped[i] = self.invManagers.get(k).updateInventory()
+        #Update the unmet and the lost demand
+        self.statMgr.updateUnmet(unmetClients)
+        self.statMgr.updateLost(lostClients)
+        #Profit of the day and general updates on the stats
+        
 
+
+        return obs,reward,done,{}
 
                 
 
