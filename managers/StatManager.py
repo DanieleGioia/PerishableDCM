@@ -13,8 +13,13 @@ class StatManager:
     
     def __init__(self, prod_setting: dict):
         self.prod_setting = prod_setting
-        keys_list = list(prod_setting.keys())
-        self.nProducts = len(prod_setting.keys())
+        self.keys_list = list(prod_setting.keys())
+        #keysList with age decoupling
+        reps = []
+        for k in self.keys_list:
+            reps.append(prod_setting.get(k)['SL'])
+        self.keys_list_age = np.repeat(self.keys_list,reps)
+        self.nProducts = len(self.keys_list)
         self.TotalOrdered = np.zeros(self.nProducts)
         self.TotalSold = np.zeros(self.nProducts)
         self.TotalScrapped = np.zeros(self.nProducts)

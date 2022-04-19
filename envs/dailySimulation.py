@@ -29,8 +29,11 @@ class DailySimulation(gym.Env):
         self.scenario = self.scenarioMgr.makeScenario(self.timeHorizon)
         #oreder history, useful to study the shape of the policy per product
         self.history = {}
+        #cumulative sales per product
+        self.sales = {}
         for k in self.invManagers.keys():
             self.history[k] = []
+            self.sales[k] = 0
 
 
     def reset(self):
@@ -41,6 +44,7 @@ class DailySimulation(gym.Env):
             self.invManagers.get(k).clearState()
             self.supManagers.get(k).clearState() 
             self.history[k] = []
+            self.sales[k] = 0
             # the state variable has, for each product, the OnOrder divided by residual lead time and the inventory divided by Residual shelf life.
             stateVariable[k] =  np.concatenate( (self.supManagers.get(k).OnOrder[:-1],self.invManagers.get(k).Inventory[:-1] ) ,axis = 0) 
         #The last value of the dictionary of the state variable is the day of the week
@@ -103,10 +107,17 @@ class DailySimulation(gym.Env):
             #oth nothing is offered at all
                 unmetClients += 1
             #Once the choice is made, this is what the store observes
-            if choice == 0: #no purchase 
-                    lostClients += 1
-            else:
-                #TODO: Complete the purchase management
+            #here we update the inventory if a purchase happens
+            if choice == 0: #no purchase, no inventory update, lost sales
+                #it can be generalized in case of backloggig
+                    lostClients += 1 
+            else: #the client purchased something we have to find the product key and the age of the item
+                productKey = self.statMgr.keys_list_age[choice]
+                inventoryMgr = self.invManagers[productKey]
+                #record the sale
+
+
+                
 
 
 
