@@ -2,11 +2,11 @@
 
 This library simulates the inventory control problem of perishable products by means of Discrete Choice Methods (DCM).
 
-Specifically, **PerishableDCM** is a simulation environment for the management of perishbale items with lead times and a fixed shelf life. It deals with a multiple items, where orders for fresh produce are issued each day. The product characteristics are:
+Specifically, **PerishableDCM** is a simulation environment for the management of perishbale items with lead times and a fixed shelf life. It deals with a multiple items, where orders for fresh products are issued each day. The product characteristics are:
 
-1. the price at which items are purchased (C)
-2. the price at which items are sold (P)
-3. the salvage value (if any), when the items are scrapped (MD)
+1. The price at which items are purchased (C)
+2. The price at which items are sold (P)
+3. The salvage value (if any), when the items are scrapped (MD)
 
 Demand is uncertain and subject to daily seasonality. The objective is to maximize the long-run average daily profit, but the software provides insights in the generated waste as well.
 
@@ -90,14 +90,14 @@ flagPrint = True
 provides insight on each step of the simulation. E.g.,
 
 ```
- day 409 
+ day 407 
  inventory:
 Product A : Stored
-         101.0 items with  1 Residual shelf life
-         89.0 items with  2 Residual shelf life
-         75.0 items with  3 Residual shelf life
-Product B : Stored
          0.0 items with  1 Residual shelf life
+         0.0 items with  2 Residual shelf life
+         101.0 items with  3 Residual shelf life
+Product B : Stored
+         19.0 items with  1 Residual shelf life
  onOrder:
 Product A :Waiting for
          160.0  items A have just arrived.
@@ -108,16 +108,17 @@ Product B :Waiting for
          100.0  items A have just arrived.
          100.0  items, expected in 1 days
          100.0  items, expected in 2 days
-Total demand (partially lost):  257.0
-Product  A  Ordered:  160  Sold:   [  0.   0.   0. 112.]  Scrapped:  101.0
-Product  B  Ordered:  100  Sold:   [  0. 100.]  Scrapped:  0.0
- No purchase:  45 Unmet Demand:  0
+Total demand (partially lost):  235.0
+Product  A  Ordered:  160  Sold:   [ 0.  0.  0. 71.]  Scrapped:  0.0
+Product  B  Ordered:  100  Sold:   [19. 96.]  Scrapped:  0.0
+ No purchase:  49 Unmet Demand:  0
 Total unmet so far 6655
-Total ordered so far  106340.0
-Total scrapped so far 13560.0
-Total sold so far [51188. 40700.]
-Profit of the day  392.0
-State observation:  {'A': array([160., 160., 160.,  48.,  75.,  89.]), 'B': array([100., 100.,   0.]), 'Day': 4}
+Total ordered so far  105820.0
+Total scrapped so far 13459.0
+Total sold so far [50991. 40496.]
+Average profit 454.7299999999998
+Profit of the day  192.7
+State observation:  {'A': array([160., 160., 160.,  89., 101.,   0.]), 'B': array([100., 100.,   4.]), 'Day': 2}
 Press Enter to continue
 
 ```
