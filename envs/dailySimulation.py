@@ -46,7 +46,7 @@ class DailySimulation(gym.Env):
             self.history[k] = []
             self.sales[k] = np.zeros(self.invManagers.get(k).ShelfLife)
             # the state variable has, for each product, the OnOrder divided by residual lead time and the inventory divided by Residual shelf life.
-            obs[k] =  np.concatenate( (self.supManagers.get(k).OnOrder[:-1],self.invManagers.get(k).Inventory[:-1] ) ,axis = 0) 
+            obs[k] =  np.concatenate( (np.flip(self.supManagers.get(k).OnOrder[:-1]),np.flip(self.invManagers.get(k).Inventory[:-1] )) ,axis = 0) 
         #The last value of the dictionary of the state variable is the day of the week
         obs['Day'] = 0 #Monday
         #stats clear            
@@ -142,14 +142,13 @@ class DailySimulation(gym.Env):
             print( 'Total ordered so far ', sum(self.statMgr.TotalOrdered))
             print( 'Total scrapped so far', sum(self.statMgr.TotalScrapped))
             print( 'Total sold so far', self.statMgr.TotalSold)
-            print( 'Average profit', self.statMgr.getAverageProfit() )
             print( 'Profit of the day ', reward)
 
         #new state observed post-scrapped, before the new order is made
         obs = {}
         for k in self.invManagers.keys(): #supMan and invMan must share the keys of the products
             # the state variable has, for each product, the OnOrder divided by residual lead time and the inventory divided by Residual shelf life.
-            obs[k] =  np.concatenate( (self.supManagers.get(k).OnOrder[:-1],self.invManagers.get(k).Inventory[:-1] ) ,axis = 0) 
+            obs[k] =  np.concatenate( (np.flip(self.supManagers.get(k).OnOrder[:-1]),np.flip(self.invManagers.get(k).Inventory[:-1]) ) ,axis = 0) 
         #The last value of the dictionary of the state variable is the day of the week
         obs['Day'] = (self.current_step+1)%7 #Day of the week from 0(Mon) to 6(Sun)
 
@@ -158,6 +157,8 @@ class DailySimulation(gym.Env):
             print( 'State observation: ', obs)
 
         done = self.current_step >= self.timeHorizon - 1
+        if done:
+            print('Simulation metrics:\n\tAverage Profit = ',self.getAverageProfit(),'\n\tAverage Waste = ',self.getAverageScrapped())
         return obs,reward,done,{}
 
                 

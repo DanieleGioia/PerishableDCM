@@ -108,6 +108,7 @@ class StatManager:
             purchaseCost += self.prod_seting.get(k)['C']*self.TotalOrdered[i]
         return purchaseCost
     #Main performance metrics
+    #They makes sense ONLY at the end of the horizon
     def getAverageProfit(self):
         return self.TotalProfit / self.activeTimeHorizon
     def getAverageScrapped(self):
