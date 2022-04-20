@@ -26,7 +26,7 @@ scenarioMgr = ScenarioGeneratorRandom(store_setting)
 scenarioMgr.reset() #called just after to set the seed 
 #Related time horizon of the simulation
 transientWeeks = 0
-learnWeeks = 60 #number of weeks emplyoed to learn a policy
+learnWeeks = 6 #number of weeks emplyoed to learn a policy
 testWeeks = 600
 timeHorizonLearn = 7*learnWeeks #time horizon in days
 timeHorizonTest = 7*testWeeks #time horizon in days
@@ -60,4 +60,11 @@ consumer.setQuality(np.array(qualities))
 #####
 # Sequential-env with daily dependent actions 
 #####
-env = DailySimulation(scenarioMgr,timeHorizonLearn,invManagers,supManagers,statMgr,consumer)
+env = DailySimulation(scenarioMgr,timeHorizonLearn,invManagers,supManagers,statMgr,consumer,flagPrint)
+
+examplePolicy = np.array([160,100])
+
+done = False
+obs = env.reset()
+while not done:
+    obs, reward, done, _ = env.step(examplePolicy)

@@ -33,7 +33,7 @@ class DailySimulation(gym.Env):
         self.sales = {}
         for k in self.invManagers.keys():
             self.history[k] = []
-            self.sales[k] = 0
+            self.sales[k] = np.zeros(self.invManagers.get(k).ShelfLife)
 
 
     def reset(self):
@@ -44,7 +44,7 @@ class DailySimulation(gym.Env):
             self.invManagers.get(k).clearState()
             self.supManagers.get(k).clearState() 
             self.history[k] = []
-            self.sales[k] = 0
+            self.sales[k] = np.zeros(self.invManagers.get(k).ShelfLife)
             # the state variable has, for each product, the OnOrder divided by residual lead time and the inventory divided by Residual shelf life.
             obs[k] =  np.concatenate( (self.supManagers.get(k).OnOrder[:-1],self.invManagers.get(k).Inventory[:-1] ) ,axis = 0) 
         #The last value of the dictionary of the state variable is the day of the week
@@ -62,20 +62,21 @@ class DailySimulation(gym.Env):
         for i,k in enumerate(self.supManagers.keys()):
             self.supManagers.get(k).GetOrder(action[i])
             self.history.get(k).append(action[i])
-            self.sales[k] = 0 #sales of the previous day erased
+            self.sales[k] = np.zeros(self.invManagers.get(k).ShelfLife) #sales of the previous day erased
         #update clock of the stats
         self.statMgr.updateClock()
 
         #Debug prints
         if self.flagPrint: 
             #current inventory
+            print('------------------------------------------')
             print('\n day',self.current_step,'\n inventory:')
             for k in self.invManagers.keys():
-                print('Product',k,': Stored', np.ceil(self.invManagers.get(k)), 'items with ', i+1, 'Residual shelf life')
+                print('Product',k,': Stored')
                 for i in range(self.invManagers.get(k).ShelfLife-1):
                     print('\t', self.invManagers.get(k).Inventory[i],'items with ', i+1, 'Residual shelf life')
             #current on order
-            print('\n day',self.current_step,'\n onOrder:')
+            print(' onOrder:')
             for k in self.supManagers.keys():
                 print('Product',k,':Waiting for')
                 for i in range(self.supManagers.get(k).LeadTime+1):
@@ -103,23 +104,23 @@ class DailySimulation(gym.Env):
             if any(availability):
             #if something is available, it is presented to the consumer
                 choice = self.consumer.makeChoice(availability)
+            #Once the choice is made, this is what the store observes
+            #here we update the inventory if a purchase happens
+                if choice == -1: #no purchase, no inventory update, lost sales it can be generalized in case of backloggig
+                    lostClients += 1 
+                else: #the client purchased something we have to find the product key and the age of the item
+                    productKey = self.statMgr.keys_list_age[choice]
+                    inventoryMgr = self.invManagers[productKey]
+                    #record the sale and update the inventory
+                    #we also have to pass the age of the sold item
+                    #concernig the same product, the highest is the index, the newest is the chosen item
+                    #Let us define an array such that it is equal to the age of the item of a product w.r.t. the order of the array of the keys
+                    #it is equals to the shelf life before the product key and equals to zero after that
+                    ageArray = inventoryMgr.ShelfLife - np.cumsum(self.statMgr.keys_list_age == productKey)
+                    self.sales[productKey][inventoryMgr.ShelfLife - ageArray[choice] - 1] += inventoryMgr.meetDemand(ageArray[choice])
             else:
             #oth nothing is offered at all
                 unmetClients += 1
-            #Once the choice is made, this is what the store observes
-            #here we update the inventory if a purchase happens
-            if choice == -1: #no purchase, no inventory update, lost sales it can be generalized in case of backloggig
-                lostClients += 1 
-            else: #the client purchased something we have to find the product key and the age of the item
-                productKey = self.statMgr.keys_list_age[choice]
-                inventoryMgr = self.invManagers[productKey]
-                #record the sale and update the inventory
-                #we also have to pass the age of the sold item
-                #concernig the same product, the highest is the index, the newest is the chosen item
-                #Let us define an array such that it is equal to the age of the item of a product w.r.t. the order of the array of the keys
-                #it is equals to the shelf life before the product key and equals to zero after that
-                ageArray = inventoryMgr.ShelfLife - np.cumsum(self.statMgr.keys_list_age == productKey)
-                self.sales[productKey] += inventoryMgr.meetDemand(ageArray[choice])
         #retailer close, en of the day
         #Update the inventory by scrapping and update the age of the residuals items
         scrapped = np.zeros(self.statMgr.nProducts)
@@ -156,7 +157,7 @@ class DailySimulation(gym.Env):
         if self.flagPrint: 
             print( 'State observation: ', obs)
 
-        done = self.current_step >= self.timeHorizon
+        done = self.current_step >= self.timeHorizon - 1
         return obs,reward,done,{}
 
                 

@@ -24,17 +24,22 @@ class InventoryManager:
         self.Inventory[self.ShelfLife-1] = np.floor(orderSize)
     #Function that simulates the demand fulfillment of 1 single item per call
     def meetDemand(self,age):
-        if (not self.isAvailable()) or (not self.isAvailableAge()):
+        if (not self.isAvailable()) or (not self.isAvailableAge(age)):
             raise ValueError("The customer cannot buy something missing")
         else:
             Sales = 1
-            self.Inventory[self.ShelfLife - age] -= Sales
+            self.Inventory[self.ShelfLife - age - 1 ] -= Sales
         return Sales
 
-    def isAvailable(self): # Is this product in stock?
+    # Is this product in stock?
+    def isAvailable(self): 
         return sum(self.Inventory) >= 1
-
-    def isAvailableAge(self,age): # Is this product in stock with this particular age?
+    # Is this product in stock with this particular age?
+    def isAvailableAge(self,age): 
         if age >= self.ShelfLife or age < 0: #age cannot be equals to the SL
             raise ValueError("Age out of the bounds for this product")
-        return sum(self.Inventory[self.ShelfLife - age]) >= 1
+        return self.Inventory[self.ShelfLife - age - 1] >= 1
+    #If I ask for this product what is on the shelf?
+    def getProductAvailabilty(self):
+        return list(map(bool,self.Inventory.tolist()))
+
