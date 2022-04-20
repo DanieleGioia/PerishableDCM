@@ -4,7 +4,7 @@ This library simulates the inventory control problem of perishable products by m
 
 ### Dynamics of the simulation
 
-![The dynamics of the simulation environment is hereafter represented](./etc/PerishableRLWebSite.pdf)
+![The dynamics of the simulation environment is hereafter represented](./etc/DCM_dynamics.png)
 
 ## Available features
 
