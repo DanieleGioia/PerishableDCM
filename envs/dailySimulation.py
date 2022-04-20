@@ -39,16 +39,16 @@ class DailySimulation(gym.Env):
     def reset(self):
         self.current_step = 0
         #dictionary obs
-        stateVariable = {}
+        obs = {}
         for k in self.invManagers.keys(): #supMan and invMan must share the keys of the products
             self.invManagers.get(k).clearState()
             self.supManagers.get(k).clearState() 
             self.history[k] = []
             self.sales[k] = 0
             # the state variable has, for each product, the OnOrder divided by residual lead time and the inventory divided by Residual shelf life.
-            stateVariable[k] =  np.concatenate( (self.supManagers.get(k).OnOrder[:-1],self.invManagers.get(k).Inventory[:-1] ) ,axis = 0) 
+            obs[k] =  np.concatenate( (self.supManagers.get(k).OnOrder[:-1],self.invManagers.get(k).Inventory[:-1] ) ,axis = 0) 
         #The last value of the dictionary of the state variable is the day of the week
-        stateVariable['Day'] = 0 #Monday
+        obs['Day'] = 0 #Monday
         #stats clear            
         self.statMgr.clearStatistics()
         #new scenario 
@@ -129,15 +129,37 @@ class DailySimulation(gym.Env):
         self.statMgr.updateUnmet(unmetClients)
         self.statMgr.updateLost(lostClients)
         #Profit of the day and general updates on the stats
+        reward = self.statMgr.updateStats(action, self.sales, scrapped)
         
+        #Debug prints
+        if self.flagPrint: 
+            for i in range(action.size):
+                productKey = self.statMgr.keys_list[i]
+                print('Product ', productKey,' Ordered: ',action[i],' Sold:  ',self.sales.get(productKey),' Scrapped: ',scrapped[i])
+            print(' No purchase: ',lostClients, 'Unmet Demand: ',unmetClients)
+            print( 'Total unmet so far', self.statMgr.TotalUnmetDemand)
+            print( 'Total ordered so far ', sum(self.statMgr.TotalOrdered))
+            print( 'Total scrapped so far', sum(self.statMgr.TotalScrapped))
+            print( 'Total sold so far', self.statMgr.TotalSold)
+            print( 'Average profit', self.statMgr.getAverageProfit() )
+            print( 'Profit of the day ', reward)
 
+        #new state observed post-scrapped, before the new order is made
+        obs = {}
+        for k in self.invManagers.keys(): #supMan and invMan must share the keys of the products
+            # the state variable has, for each product, the OnOrder divided by residual lead time and the inventory divided by Residual shelf life.
+            obs[k] =  np.concatenate( (self.supManagers.get(k).OnOrder[:-1],self.invManagers.get(k).Inventory[:-1] ) ,axis = 0) 
+        #The last value of the dictionary of the state variable is the day of the week
+        obs['Day'] = (self.current_step+1)%7 #Day of the week from 0(Mon) to 6(Sun)
 
+        #Debug prints
+        if self.flagPrint: 
+            print( 'State observation: ', obs)
+
+        done = self.current_step >= self.timeHorizon
         return obs,reward,done,{}
 
                 
-
-
-
     #Metrics of the simulation
     def getAverageProfit(self):
         return self.statMgr.getAverageProfit()
