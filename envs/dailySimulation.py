@@ -162,6 +162,10 @@ class DailySimulation(gym.Env):
             print('Simulation metrics:\n\tAverage Profit = ',self.getAverageProfit(),'\n\tAverage Waste = ',self.getAverageScrapped())
         return obs,reward,done,{}
 
+    #set seed of the simulation
+    def setSeed(self,seed):
+        self.scenarioMgr.setSeed(seed)
+
                 
     #Metrics of the simulation
     def getAverageProfit(self):
