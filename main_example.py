@@ -61,7 +61,7 @@ consumer.setQuality(np.array(qualities))
 # Sequential-env with daily dependent actions 
 #####
 env = DailySimulation(scenarioMgr,timeHorizonLearn,invManagers,supManagers,statMgr,consumer,flagPrint)
-
+env.setSeed(0)
 examplePolicy = np.array([140,100])
 
 done = False
