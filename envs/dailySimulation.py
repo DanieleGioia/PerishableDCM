@@ -165,6 +165,10 @@ class DailySimulation(gym.Env):
     #set seed of the simulation
     def setSeed(self,seed):
         self.scenarioMgr.setSeed(seed)
+    #update the time horizon
+    def updateHorizon(self,timeHorizon):
+        self.timeHorizon = timeHorizon
+        self.statMgr.setTimeHorizon(self.timeHorizon)
 
                 
     #Metrics of the simulation
