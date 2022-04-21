@@ -53,6 +53,7 @@ class DailySimulation(gym.Env):
         self.statMgr.clearStatistics()
         #new scenario 
         self.scenario = self.scenarioMgr.makeScenario(self.timeHorizon)
+        return obs
 
 
     def step(self, action: np.array):
