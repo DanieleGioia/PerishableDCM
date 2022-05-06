@@ -84,7 +84,7 @@ class DailySimulation(gym.Env):
                     if i != 0:
                         print('\t',np.ceil(self.supManagers.get(k).OnOrder[i]),' items, expected in', i, 'days')
                     else:
-                        print('\t',np.ceil(self.supManagers.get(k).OnOrder[i]),' items A have just arrived.')
+                        print('\t',np.ceil(self.supManagers.get(k).OnOrder[i]),' items have just arrived.')
             #total demand
             print('Total demand (partially lost): ', self.scenario[0][self.current_step])
         
