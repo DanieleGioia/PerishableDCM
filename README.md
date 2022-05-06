@@ -105,7 +105,7 @@ Product A :Waiting for
          160.0  items, expected in 2 days
          160.0  items, expected in 3 days
 Product B :Waiting for
-         100.0  items A have just arrived.
+         100.0  items B have just arrived.
          100.0  items, expected in 1 days
          100.0  items, expected in 2 days
 Total demand (partially lost):  235.0
