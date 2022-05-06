@@ -122,6 +122,7 @@ State observation:  {'A': array([160., 160., 160.,  89., 101.,   0.]), 'B': arra
 Press Enter to continue
 
 ```
+The state observation for each product is here made of the number of expected items subjcet to the lead time, concatenated with the number of stored items, divided by their residual self life.
 
 ## Requirements
 
