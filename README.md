@@ -21,7 +21,7 @@ Two dictionaries drive the parameters of the simulation: *conf_Products* and *co
 
 For example:
 
-```
+```json
 {
 "A":{
     "LT":3,
@@ -53,8 +53,7 @@ defines two products A and B, where B has:
 
 Whereas, the *conf_Store*
 
-```
-
+```json
 {
 "Seasonals":[90,100,100,100,130,200,200],
 "ev_Daily":300,
@@ -134,7 +133,7 @@ The state observation for each product is here made of the number of expected it
 
 If you use PerishableDCM, please cite the following paper: 
 
-```
+```bibtex
 @article{GioiaFelizBrandi2022,
   title={Inventory management of vertically differentiated perishable products with stock-out based substitution},
   author={Gioia, Daniele Giovanni and Felizardo, Leonardo Kanashiro and Brandimarte, Paolo},
