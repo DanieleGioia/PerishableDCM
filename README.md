@@ -146,11 +146,11 @@ The state observation for each product is here made of the number of expected it
 
 | Name | | Version employed | Description        | Website |
 |:-----|:-:|:-----------:|:---------------------:|:-----------:|
-| gym | >= | 0.23.1 | Toolkit for developing and comparing reinforcement learning algorithms| <https://gym.openai.com/>
+| gym | >= | 0.23.1 | Toolkit for developing and comparing reinforcement learning algorithms| <https://github.com/openai/gym>
 
 # Citing Us
 
-If you use PerishableDCM, please cite the following paper: 
+For more detailed information, this code is supported by two different articles that we reccomend to cite in case you use the library.
 
 ```bibtex
 @article{GioiaFelizBrandi2022,
