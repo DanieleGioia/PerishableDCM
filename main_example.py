@@ -62,7 +62,12 @@ consumer.setQuality(np.array(qualities))
 #####
 env = DailySimulation(scenarioMgr,timeHorizonLearn,invManagers,supManagers,statMgr,consumer,flagPrint)
 env.setSeed(0)
-examplePolicy = np.array([140,100])
+#This example policy always orders 140 items and 100 items for 
+#products A and B respectively per day. 
+#As long as the policy decides a number of items per product per day, 
+#the input may come from whatever source 
+#(e.g., Deep-RL, RL, Pure Data-Driven, Expert suggestions, ...).
+examplePolicy = np.array([140,100]) 
 
 done = False
 obs = env.reset()

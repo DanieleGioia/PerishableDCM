@@ -10,6 +10,25 @@ Specifically, **PerishableDCM** is a simulation environment for the management o
 
 Demand is uncertain and subject to daily seasonality. The objective is to maximize the long-run average daily profit, but the software provides insights in the generated waste as well.
 
+## Structure of the code
+
+```bash
+|____envs
+| |______init__.py
+| |____dailySimulation.py
+|____configurations
+| |____conf_Products.json
+| |____conf_Store.json
+|____managers
+| |______init__.py
+| |____CustomerManager.py
+| |____SupplyManager.py
+| |____ScenarioGeneratorRandom.py
+| |____StatManager.py
+| |____InventoryManager.py
+|____main_example.py
+```
+
 ## Dynamics of the simulation
 
 The dynamics of the simulation of one day is hereafter represented.
@@ -44,12 +63,12 @@ For example:
 
 defines two products A and B, where B has:
 
-1. A lead time of 2 days
-2. A shelf life of 2 days
-3. A price that decrease w.r.t. to the age (4 if new, 3.3 after one day)
-4. A cost of 2
-5. No salvage value
-6. A quality (Needed for the linear DCM) that decrease w.r.t. the age (20 if new, 18 after one day)
+1. A lead time of 2 days.
+2. A shelf life of 2 days.
+3. A price that decrease w.r.t. to the age (4 if new, 3.3 after one day).
+4. A cost of 2.
+5. No salvage value.
+6. A quality (Needed for the linear DCM) that decrease w.r.t. the age (20 if new, 18 after one day).
 
 Whereas, the *conf_Store*
 
@@ -69,26 +88,25 @@ Whereas, the *conf_Store*
 
 defines:
 
-1. The seasonality that will be normalized by the software s.t. it will sum to 7
-2. The expected value of the number of clients per day
-3. The std of the number of clients per day
-4. The distribution employed to sample the number of clients (Currently Poisson and Normal are available)
-5. The DCM and its peculiar requiriments (currently only the linear DCM is available)
+1. The seasonality that will be normalized by the software s.t. it will sum to 7.
+2. The expected value of the number of clients per day.
+3. The std of the number of clients per day.
+4. The distribution employed to sample the number of clients (Currently Poisson and Normal are available).
+5. The DCM and its peculiar requiriments (currently only the linear DCM is available).
 
 ## Example
 
-A *main_example* file implements a constant policy 
-through the gym OpenAI syntax. 
+A **main_example** file implements a constant policy through the gym OpenAI syntax.
 
-The debug flag 
+The debug flag
 
-```
+```Python
 flagPrint = True
 ```
 
 provides insight on each step of the simulation. E.g.,
 
-```
+```None
  day 407 
  inventory:
 Product A : Stored
@@ -121,6 +139,7 @@ State observation:  {'A': array([160., 160., 160.,  89., 101.,   0.]), 'B': arra
 Press Enter to continue
 
 ```
+
 The state observation for each product is here made of the number of expected items subjcet to the lead time, concatenated with the number of stored items, divided by their residual self life.
 
 ## Requirements
@@ -140,4 +159,4 @@ If you use PerishableDCM, please cite the following paper:
   journal={},
   year={2022}
 }
-``` 
+```
