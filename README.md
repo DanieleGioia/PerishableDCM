@@ -150,7 +150,7 @@ The state observation for each product is here made of the number of expected it
 
 # Citing Us
 
-If you use PerishableDCM, please cite the following paper: 
+If you use PerishableDCM, please cite the following paper:
 
 ```bibtex
 @article{GioiaFelizBrandi2022,

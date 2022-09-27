@@ -17,7 +17,7 @@ store_setting = json.load(fp)
 fp.close()
 
 #Print flag
-flagPrint = False
+flagPrint = True
 
 #######Inizialization
 
@@ -26,10 +26,8 @@ scenarioMgr = ScenarioGeneratorRandom(store_setting)
 scenarioMgr.reset() #called just after to set the seed 
 #Related time horizon of the simulation
 transientWeeks = 0
-learnWeeks = 60 #number of weeks emplyoed to learn a policy
-testWeeks = 600
-timeHorizonLearn = 7*learnWeeks #time horizon in days
-timeHorizonTest = 7*testWeeks #time horizon in days
+nWeeks = 60 #number of weeks emplyoed
+timeHorizon = 7*nWeeks #time horizon in days
 #Invetory managers, one per product
 invManagers = {}
 for k in prod_setting.keys():
@@ -60,7 +58,7 @@ consumer.setQuality(np.array(qualities))
 #####
 # Sequential-env with daily dependent actions 
 #####
-env = DailySimulation(scenarioMgr,timeHorizonLearn,invManagers,supManagers,statMgr,consumer,flagPrint)
+env = DailySimulation(scenarioMgr,timeHorizon,invManagers,supManagers,statMgr,consumer,flagPrint)
 env.setSeed(0)
 #This example policy always orders 140 items and 100 items for 
 #products A and B respectively per day. 
