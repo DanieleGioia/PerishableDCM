@@ -168,5 +168,5 @@ For more detailed information, this code is supported by two different articles 
         journal = {SSRN},
         note = {PrePrint},
         title = {Simulation-Based Inventory Management of Perishable Products Via Linear Discrete Choice Models},
-        year = {2022}
+        year = {2022} }
 ```
