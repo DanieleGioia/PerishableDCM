@@ -153,10 +153,20 @@ The state observation for each product is here made of the number of expected it
 For more detailed information, this code is supported by two different articles that we reccomend to cite in case you use the library.
 
 ```bibtex
-@article{GioiaFelizBrandi2022,
-  title={Inventory management of vertically differentiated perishable products with stock-out based substitution},
-  author={Gioia, Daniele Giovanni and Felizardo, Leonardo Kanashiro and Brandimarte, Paolo},
-  journal={},
-  year={2022}
-}
+@article{Gioia22Nantes,
+	author = {Gioia, Daniele Giovanni and Felizardo, Leonardo Kanashiro and Brandimarte, Paolo},
+	journal = {IFAC-PapersOnLine},
+	number = {10},
+	pages = {2683-2688},
+	note = {10th IFAC on Manufacturing Modelling, Management and Control MIM 2022},
+	title = {Inventory management of vertically differentiated perishable products with stock-out based substitution},
+	volume = {55},
+	year = {2022} }
+    
+@artlice{PrePrint_PerishViaDCMs,
+        author = {Gioia, Daniele Giovanni and Felizardo, Leonardo Kanashiro and Brandimarte, Paolo},
+        journal = {SSRN},
+        note = {PrePrint},
+        title = {Simulation-Based Inventory Management of Perishable Products Via Linear Discrete Choice Models},
+        year = {2022}
 ```
