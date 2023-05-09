@@ -153,6 +153,15 @@ The state observation for each product is here made of the number of expected it
 For more detailed information, this code is supported by two different articles that we reccomend to cite in case you use the library.
 
 ```bibtex
+@article{gioia2023simulation,
+  title={Simulation-based inventory management of perishable products via linear discrete choice models},
+  author={Gioia, Daniele Giovanni and Felizardo, Leonardo Kanashiro and Brandimarte, Paolo},
+  journal={Computers \& Operations Research},
+  pages={106270},
+  year={2023},
+  publisher={Elsevier}
+}
+
 @article{Gioia22Nantes,
 	author = {Gioia, Daniele Giovanni and Felizardo, Leonardo Kanashiro and Brandimarte, Paolo},
 	journal = {IFAC-PapersOnLine},
@@ -162,11 +171,4 @@ For more detailed information, this code is supported by two different articles 
 	title = {Inventory management of vertically differentiated perishable products with stock-out based substitution},
 	volume = {55},
 	year = {2022} }
-    
-@artlice{PrePrint_PerishViaDCMs,
-        author = {Gioia, Daniele Giovanni and Felizardo, Leonardo Kanashiro and Brandimarte, Paolo},
-        journal = {SSRN},
-        note = {PrePrint},
-        title = {Simulation-Based Inventory Management of Perishable Products Via Linear Discrete Choice Models},
-        year = {2022} }
 ```
