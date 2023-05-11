@@ -154,13 +154,13 @@ For more detailed information, this code is supported by two different articles 
 
 ```bibtex
 @article{gioia2023simulation,
-  title={Simulation-based inventory management of perishable products via linear discrete choice models},
-  author={Gioia, Daniele Giovanni and Felizardo, Leonardo Kanashiro and Brandimarte, Paolo},
-  journal={Computers \& Operations Research},
-  pages={106270},
-  volume = {157},
-  year={2023},
-  publisher={Elsevier}
+	title={Simulation-based inventory management of perishable products via linear discrete choice models},
+  	author={Gioia, Daniele Giovanni and Felizardo, Leonardo Kanashiro and Brandimarte, Paolo},
+  	journal={Computers \& Operations Research},
+  	pages={106270},
+  	volume = {157},
+  	year={2023},
+  	publisher={Elsevier}
 }
 
 @article{Gioia22Nantes,
