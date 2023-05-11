@@ -158,6 +158,7 @@ For more detailed information, this code is supported by two different articles 
   author={Gioia, Daniele Giovanni and Felizardo, Leonardo Kanashiro and Brandimarte, Paolo},
   journal={Computers \& Operations Research},
   pages={106270},
+  volume = {157},
   year={2023},
   publisher={Elsevier}
 }
