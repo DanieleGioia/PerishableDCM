@@ -177,14 +177,14 @@ For more detailed information, this code is supported by two different articles 
 
 ${\color{red}{\text{CORRIGENDUM}}}$ on 'Simulation-based inventory management of perishable products via linear discrete choice models'
 
-Please notice that in Eq.(10) and Eq.(12) of the article, sums in $l$ range over the following values:
-
-$$ \sum_{l=0}^{\mathsf{LT}_j-1} $$
-
+Please notice that in Eq.(10) and Eq.(12) of the article, sums in $l$ range over the following values: 
+```math
+\sum_{l=0}^{\mathsf{LT}_j-1} \quad \sum_{d=2}^{\mathsf{SL}_j}
+```
 and NOT
-
-$$ \sum_{l=1}^{\mathsf{LT}_j}, $$
-
+```math
+\sum_{l=1}^{\mathsf{LT}_j} \quad \sum_{d=1}^{\mathsf{SL}_j}
+```
 as currently presented. Moreover, at the end of page 5, regarding policies where one item is seasonally managed and the other ones are not, parameters are
 
 $$ z \in \mathbb{R}^{J-1+(K+1)} $$
@@ -193,5 +193,5 @@ and NOT
 
 $$ z \in \mathbb{R}^{J+(K+1)}, $$
 
-as currently presented. The aforementioned typos affect only the exposition of the model and all the numerical results remain consistent.
+as currently presented. The aforementioned typos affect only the exposition of the model and all the results as well as the rest of the paper are not affected.
 ```
