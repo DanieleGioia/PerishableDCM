@@ -179,7 +179,7 @@ ${\color{red}{\text{CORRIGENDUM}}}$ on 'Simulation-based inventory management of
 
 Please notice that in Eq.(10) and Eq.(12) of the article, sums in $l$ range over the following values: 
 ```math
-\sum_{l=0}^{\mathsf{LT}_j-1} \quad \sum_{d=2}^{\mathsf{SL}_j}
+\sum_{l=0}^{\mathsf{LT}_j-1} \quad \sum_{d=1}^{\mathsf{SL-1}_j}
 ```
 and NOT
 ```math
