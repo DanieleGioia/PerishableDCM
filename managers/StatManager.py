@@ -95,17 +95,17 @@ class StatManager:
     def getTotalSalvageValue(self):
         salvageValue = 0
         for i,k in enumerate(self.prod_setting.keys()):
-            salvageValue += self.prod_seting.get(k)['MD']*self.TotalScrapped[i]
+            salvageValue += self.prod_setting.get(k)['MD']*self.TotalScrapped[i]
         return salvageValue
     def getTotalRevenue(self):
         revenue = 0
         for i,k in enumerate(self.prod_setting.keys()):
-            revenue += self.prod_seting.get(k)['P']*self.TotalSold[i]
+            revenue += self.prod_setting.get(k)['P']*self.TotalSold[i]
         return revenue
     def getTotalPurchaseCost(self):
         purchaseCost = 0
         for i,k in enumerate(self.prod_setting.keys()):
-            purchaseCost += self.prod_seting.get(k)['C']*self.TotalOrdered[i]
+            purchaseCost += self.prod_setting.get(k)['C']*self.TotalOrdered[i]
         return purchaseCost
     #Main performance metrics
     #They makes sense ONLY at the end of the horizon
