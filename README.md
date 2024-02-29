@@ -175,7 +175,7 @@ For more detailed information, this code is supported by two different articles 
 ```
 
 
-${\color{red}{\text{Typos on}}}$ on 'Simulation-based inventory management of perishable products via linear discrete choice models'
+${\color{red}{\text{Typos}}}$ on 'Simulation-based inventory management of perishable products via linear discrete choice models'
 
 Please notice that in Eq.(10) and Eq.(12) of the article, sums range over the following values: 
 ```math
