@@ -2,13 +2,13 @@
 
 This library simulates the inventory control problem of perishable products by means of Discrete Choice Methods (DCM).
 
-Specifically, **PerishableDCM** is a simulation environment for the management of perishbale items with lead times and a fixed shelf life. It deals with a multiple items, where orders for fresh products are issued each day. The product characteristics are:
+Specifically, **PerishableDCM** is a simulation environment for the management of perishable items with lead times and a fixed shelf life. It deals with multiple items, where orders for fresh products are issued each day. The product characteristics are:
 
 1. The price at which items are purchased (C)
 2. The price at which items are sold (P)
 3. The salvage value (if any), when the items are scrapped (MD)
 
-Demand is uncertain and subject to daily seasonality. The objective is to maximize the long-run average daily profit, but the software provides insights in the generated waste as well.
+Demand is uncertain and subject to daily seasonality. The objective is to maximize the long-run average daily profit, but the software provides insights into the generated waste as well.
 
 ## Structure of the code
 
@@ -65,10 +65,10 @@ defines two products A and B, where B has:
 
 1. A lead time of 2 days.
 2. A shelf life of 2 days.
-3. A price that decrease w.r.t. to the age (4 if new, 3.3 after one day).
+3. A price that decreases w.r.t. to the age (4 if new, 3.3 after one day).
 4. A cost of 2.
 5. No salvage value.
-6. A quality (Needed for the linear DCM) that decrease w.r.t. the age (20 if new, 18 after one day).
+6. A quality (Needed for the linear DCM) that decreases w.r.t. the age (20 if new, 18 after one day).
 
 Whereas, the *conf_Store*
 
@@ -92,7 +92,7 @@ defines:
 2. The expected value of the number of clients per day.
 3. The std of the number of clients per day.
 4. The distribution employed to sample the number of clients (Currently Poisson and Normal are available).
-5. The DCM and its peculiar requiriments (currently only the linear DCM is available).
+5. The DCM and its peculiar requirements (currently only the linear DCM is available).
 
 ## Example
 
@@ -104,7 +104,7 @@ The debug flag
 flagPrint = True
 ```
 
-provides insight on each step of the simulation. E.g.,
+provides insight into each step of the simulation. E.g.,
 
 ```None
  day 407 
@@ -140,7 +140,7 @@ Press Enter to continue
 
 ```
 
-The state observation for each product is here made of the number of expected items subjcet to the lead time, concatenated with the number of stored items, divided by their residual self life.
+The state observation for each product is here made of the number of expected items subject to the lead time, concatenated with the number of stored items, divided by their residual shelf life.
 
 ## Requirements
 
@@ -150,7 +150,7 @@ The state observation for each product is here made of the number of expected it
 
 # Citing Us
 
-For more detailed information, this code is supported by two different articles that we reccomend to cite in case you use the library.
+For more detailed information, this code is supported by two different articles that we recommend to cite in case you use the library.
 
 ```bibtex
 @article{gioia2023simulation,
@@ -175,9 +175,9 @@ For more detailed information, this code is supported by two different articles 
 ```
 
 
-${\color{red}{\text{CORRIGENDUM}}}$ on 'Simulation-based inventory management of perishable products via linear discrete choice models'
+${\color{red}{\text{Typos on}}}$ on 'Simulation-based inventory management of perishable products via linear discrete choice models'
 
-Please notice that in Eq.(10) and Eq.(12) of the article, sums in $l$ range over the following values: 
+Please notice that in Eq.(10) and Eq.(12) of the article, sums range over the following values: 
 ```math
 \sum_{l=0}^{\mathsf{LT}_j-1} \quad \sum_{d=1}^{\mathsf{SL}_j-1}
 ```
@@ -187,11 +187,11 @@ and NOT
 ```
 as currently presented. Moreover, at the end of page 5, regarding policies where one item is seasonally managed and the other ones are not, parameters are
 
-$$ z \in \mathbb{R}^{J-1+(K+1)} $$
+$$ \mathbf{z} \in \mathbb{R}^{J-1+(K+1)} $$
 
 and NOT
 
-$$ z \in \mathbb{R}^{J+(K+1)}, $$
+$$ \mathbf{z} \in \mathbb{R}^{J+(K+1)}, $$
 
 as currently presented. The aforementioned typos affect only the exposition of the model and all the results as well as the rest of the paper are not affected.
 ```
