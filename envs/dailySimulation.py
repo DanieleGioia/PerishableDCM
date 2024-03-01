@@ -48,7 +48,7 @@ class DailySimulation(gym.Env):
             # the state variable has, for each product, the OnOrder divided by residual lead time and the inventory divided by Residual shelf life.
             obs[k] =  np.concatenate( (np.flip(self.supManagers.get(k).OnOrder[:-1]),np.flip(self.invManagers.get(k).Inventory[:-1] )) ,axis = 0) 
         #The last value of the dictionary of the state variable is the day of the week
-        obs['Day'] = 0 #Monday
+        obs['Day'] = 1 #season refers to the day after
         #stats clear            
         self.statMgr.clearStatistics()
         #new scenario 
