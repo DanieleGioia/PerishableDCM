@@ -57,7 +57,7 @@ class StatManager:
     def updateClock(self):
         self.myClock = self.myClock + 1
     #####
-    def updateStats(self,Ordered: np.array, Sales: dict, Scrapped: np.array):
+    def updateStats(self,ordered: np.array, sales: dict, scrapped: np.array):
         """
         update internal clock and check if we are still in Head or already in Tail.
         It must be called at the end of each day
@@ -68,20 +68,18 @@ class StatManager:
         Notice that the prod_setting has prices and quality ordered from the worst (oldest) to the best (newest)
         """
         if (self.myClock >= self.FirstTimeBucket) and (self.myClock <= self.LastTimeBucket):
-            self.TotalOrdered += Ordered
-            self.TotalScrapped += Scrapped
+            self.TotalOrdered += ordered
+            self.TotalScrapped += scrapped
             #
-            SalesSums = np.zeros(self.nProducts)
-            Profit = 0
+            profit = 0
             for i,k in enumerate(self.prod_setting.keys()):
-                #Aggregation of the sales per product
-                SalesSums[i] = sum(Sales.get(k))
-                #The Profit uses disaggregated sales instead
-                Profit += sum(np.array(self.prod_setting.get(k)['P'])*np.array(Sales.get(k))) + self.prod_setting.get(k)['MD']*Scrapped[i] - self.prod_setting.get(k)['C']*Ordered[i]
-            self.TotalSold += SalesSums
-            self.TotalProfit += Profit
+                product_sales = np.array(sales.get(k))
+                profit += np.dot(self.prod_setting[k]['P'], product_sales)
+                profit += self.prod_setting[k]['MD'] * scrapped[i] - self.prod_setting[k]['C'] * ordered[i]
+                self.TotalSold[i] += product_sales.sum()
+            self.TotalProfit += profit
 
-            return Profit
+            return profit
         else:
             return 0 # to return a reward for the first time-bucket
             
@@ -112,7 +110,7 @@ class StatManager:
     def getAverageProfit(self):
         return self.TotalProfit / self.activeTimeHorizon
     def getAverageScrapped(self):
-        return sum(self.TotalScrapped)/ self.activeTimeHorizon
+        return self.TotalScrapped.sum()/ self.activeTimeHorizon
         
 ######
 #####

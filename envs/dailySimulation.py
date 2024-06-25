@@ -33,7 +33,7 @@ class DailySimulation(gym.Env):
         self.sales = {}
         for k in self.invManagers.keys():
             self.history[k] = []
-            self.sales[k] = np.zeros(self.invManagers.get(k).ShelfLife)
+            self.sales[k] = np.zeros(self.invManagers.get(k).shelfLife)
 
 
     def reset(self):
@@ -44,9 +44,9 @@ class DailySimulation(gym.Env):
             self.invManagers.get(k).clearState()
             self.supManagers.get(k).clearState() 
             self.history[k] = []
-            self.sales[k] = np.zeros(self.invManagers.get(k).ShelfLife)
+            self.sales[k] = np.zeros(self.invManagers.get(k).shelfLife)
             # the state variable has, for each product, the OnOrder divided by residual lead time and the inventory divided by Residual shelf life.
-            obs[k] =  np.concatenate( (np.flip(self.supManagers.get(k).OnOrder[:-1]),np.flip(self.invManagers.get(k).Inventory[:-1] )) ,axis = 0) 
+            obs[k] =  np.concatenate( (np.flip(self.supManagers.get(k).OnOrder[:-1]),np.flip(self.invManagers.get(k).inventory[:-1] )) ,axis = 0) 
         #The last value of the dictionary of the state variable is the day of the week
         obs['Day'] = 1 #season refers to the day after
         #stats clear            
@@ -63,7 +63,7 @@ class DailySimulation(gym.Env):
         for i,k in enumerate(self.supManagers.keys()):
             self.supManagers.get(k).GetOrder(action[i])
             self.history.get(k).append(action[i])
-            self.sales[k] = np.zeros(self.invManagers.get(k).ShelfLife) #sales of the previous day erased
+            self.sales[k] = np.zeros(self.invManagers.get(k).shelfLife) #sales of the previous day erased
         #update clock of the stats
         self.statMgr.updateClock()
 
@@ -74,8 +74,8 @@ class DailySimulation(gym.Env):
             print('\n day',self.current_step,'\n inventory:')
             for k in self.invManagers.keys():
                 print('Product',k,': Stored')
-                for i in range(self.invManagers.get(k).ShelfLife-1):
-                    print('\t', self.invManagers.get(k).Inventory[i],'items with ', i+1, 'Residual shelf life')
+                for i in range(self.invManagers.get(k).shelfLife-1):
+                    print('\t', self.invManagers.get(k).inventory[i],'items with ', i+1, 'Residual shelf life')
             #current on order
             print(' onOrder:')
             for k in self.supManagers.keys():
@@ -117,8 +117,8 @@ class DailySimulation(gym.Env):
                     #concernig the same product, the highest is the index, the newest is the chosen item
                     #Let us define an array such that it is equal to the age of the item of a product w.r.t. the order of the array of the keys
                     #it is equals to the shelf life before the product key and equals to zero after that
-                    ageArray = inventoryMgr.ShelfLife - np.cumsum(self.statMgr.keys_list_age == productKey)
-                    self.sales[productKey][inventoryMgr.ShelfLife - ageArray[choice] - 1] += inventoryMgr.meetDemand(ageArray[choice])
+                    ageArray = inventoryMgr.shelfLife - np.cumsum(self.statMgr.keys_list_age == productKey)
+                    self.sales[productKey][inventoryMgr.shelfLife - ageArray[choice] - 1] += inventoryMgr.meetDemand(ageArray[choice])
             else:
             #oth nothing is offered at all
                 unmetClients += 1
@@ -149,7 +149,7 @@ class DailySimulation(gym.Env):
         obs = {}
         for k in self.invManagers.keys(): #supMan and invMan must share the keys of the products
             # the state variable has, for each product, the OnOrder divided by residual lead time and the inventory divided by Residual shelf life.
-            obs[k] =  np.concatenate( (np.flip(self.supManagers.get(k).OnOrder[:-1]),np.flip(self.invManagers.get(k).Inventory[:-1]) ) ,axis = 0) 
+            obs[k] =  np.concatenate( (np.flip(self.supManagers.get(k).OnOrder[:-1]),np.flip(self.invManagers.get(k).inventory[:-1]) ) ,axis = 0) 
         #The last value of the dictionary of the state variable is the day of the week
         obs['Day'] = (self.current_step+1)%7 #Day of the week from 0(Mon) to 6(Sun)
 

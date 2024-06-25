@@ -7,39 +7,38 @@ class InventoryManager:
     it manages the invetory according to the ShelfLife.  Each product needs its InventoryManager
     The constructor needs the shelf life
     """
-    def __init__(self, ShelfLife):
-        self.Inventory = np.zeros(ShelfLife)
-        self.ShelfLife = ShelfLife
+    def __init__(self, shelfLife: int):
+        self.inventory = np.zeros(shelfLife, dtype=int)
+        self.shelfLife = shelfLife
     # Clean up inventory
     def clearState(self):
-        self.Inventory = np.zeros(self.ShelfLife)
+        self.inventory = np.zeros(self.shelfLife)
     # Update Inventory (does not depend on FIFO/LIFO)
     def updateInventory(self):
-        Scrapped = self.Inventory[0]
-        for i in range(self.ShelfLife - 1):
-            self.Inventory[i] = self.Inventory[i+1]
-        self.Inventory[self.ShelfLife-1] = 0
-        return Scrapped
+        scrapped = self.inventory[0]
+        self.inventory = np.roll(self.inventory, -1)
+        self.inventory[self.shelfLife-1] = 0
+        return scrapped
     def receiveSupply(self, orderSize):
-        self.Inventory[self.ShelfLife-1] = np.floor(orderSize)
+        self.inventory[self.shelfLife-1] = np.floor(orderSize)
     #Function that simulates the demand fulfillment of 1 single item per call
     def meetDemand(self,age):
         if (not self.isAvailable()) or (not self.isAvailableAge(age)):
             raise ValueError("The customer cannot buy something missing")
         else:
-            Sales = 1
-            self.Inventory[self.ShelfLife - age - 1 ] -= Sales
-        return Sales
+            sales = 1
+            self.inventory[self.shelfLife - age - 1 ] -= sales
+        return sales
 
     # Is this product in stock?
     def isAvailable(self): 
-        return sum(self.Inventory) >= 1
+        return np.any(self.inventory > 0)
     # Is this product in stock with this particular age?
     def isAvailableAge(self,age): 
-        if age >= self.ShelfLife or age < 0: #age cannot be equals to the SL
+        if age >= self.shelfLife or age < 0: #age cannot be equals to the SL
             raise ValueError("Age out of the bounds for this product")
-        return self.Inventory[self.ShelfLife - age - 1] >= 1
+        return self.inventory[self.shelfLife - age - 1] >= 1
     #If I ask for this product what is on the shelf?
     def getProductAvailabilty(self):
-        return list(map(bool,self.Inventory.tolist()))
+        return list(map(bool,self.inventory.tolist()))
 

@@ -5,9 +5,9 @@ import numpy as np
 
 class SupplyManager:
     
-    def __init__(self,LeadTime):
+    def __init__(self,LeadTime: int):
         self.LeadTime = LeadTime
-        self.OnOrder = np.zeros(LeadTime+1)
+        self.OnOrder = np.zeros(LeadTime+1, dtype=int)
     #Clear queue of orders
     def clearState(self):
     #If lead time is zero, use one position as a placeholder
@@ -16,8 +16,7 @@ class SupplyManager:
     def deliverSupply(self):
         Delivery = self.OnOrder[0]
         #now shift up
-        for k in range(self.LeadTime):
-            self.OnOrder[k] = self.OnOrder[k+1]
+        self.OnOrder = np.roll(self.OnOrder, -1)
         self.OnOrder[-1] = 0
         return Delivery
     # Update Inventory

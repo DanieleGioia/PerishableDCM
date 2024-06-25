@@ -13,7 +13,7 @@ class ScenarioGeneratorRandom:
     def __init__(self,store_setting: dict):
         seasonalityRaw = np.array(store_setting['Seasonals'])
         self.seasonality = seasonalityRaw/seasonalityRaw.mean() #Seasonality s.t. sums to 7
-        self.Mu = self.seasonality*store_setting['ev_Daily'] #expected values with seasonality, assumed for any distr
+        self.mu = self.seasonality*store_setting['ev_Daily'] #expected values with seasonality, assumed for any distr
         self.distr = store_setting['Distr']
         if self.distr == 'Normal': #Normal distributed scenario requires the std
             self.Sigma = self.seasonality*store_setting['std_Daily'] #std values with seasonality
@@ -31,19 +31,19 @@ class ScenarioGeneratorRandom:
     def makeScenario(self, timeHorizon):
         self.checkTimeHorizon(timeHorizon) #check weekly pattern
         #TODO: the demand scenario is set as a matrix because we plan to allow different scenarios at once to deploy confidence intervals
-        demandScenario = np.zeros( (1, timeHorizon) ) #pre-allocation
-        for i in range(timeHorizon):
-            dayWeek = i%7 #from 0 monday to 6 sunday
-            if self.distr == 'Normal':
-                demandScenario[0][i] = max(0, np.random.normal(self.Mu[dayWeek],self.Sigma[dayWeek]))
-            elif self.distr == 'Poisson':
-                demandScenario[0][i] = np.random.poisson(self.Mu[dayWeek])
-            else:
-                raise ValueError('Distribution type not found')
-        return demandScenario
+        if self.distr == 'Normal':
+            scenario = np.maximum(0, np.random.normal(
+                self.mu[np.arange(timeHorizon) % 7],
+                self.sigma[np.arange(timeHorizon) % 7]
+            ))
+        elif self.distr == 'Poisson':
+            scenario = np.random.poisson(self.mu[np.arange(timeHorizon) % 7])
+
+        return scenario.reshape(1, -1)
 
     #Time Horizon check
-    def checkTimeHorizon(self,timeHorizon):
+    @staticmethod
+    def checkTimeHorizon(timeHorizon: int):
         if timeHorizon%7: #if not multiple of 7 it will raise the error
             raise ValueError('The environment is weekly based. TimeHorizon must be multiple of 7')
 

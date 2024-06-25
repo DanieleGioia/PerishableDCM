@@ -19,8 +19,8 @@ class CustomerManager:
             self.beta = DCM_setting['beta']
             #prices and quality are quantities required for this DCM.
             #They must be set by the setters
-            self.prices = 0
-            self.quality = 0
+            self.prices: np.ndarray = np.array([])
+            self.quality: np.ndarray = np.array([])
         else:
             raise ValueError("DCM not available")
     #item choice w.r.t. the shelf availability
