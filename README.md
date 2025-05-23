@@ -195,4 +195,4 @@ $$ \mathbf{z} \in \mathbb{R}^{J+(K+1)}, $$
 
 as currently presented. The aforementioned typos affect only the exposition of the model and all the results as well as the rest of the paper are not affected.
 
-${\color{orange}{\text{Note}}}$: The characteristics of the problem directly affect the convergence of the simulated expected value. Use simulations long enough! I developed some heuristic methods to set a convergence check in [Gioia, Minner (2023)](https://github.com/DanieleGioia/PerishableMEC), but it is still naïve and prone to being fooled by randomness. Some work on this direction should be made. I also stress that the optimization solver choice is a complex matter. The problem here had a lot of dimensions, with many local optima.
+${\color{orange}{\text{Note}}}$: The characteristics of the problem directly affect the convergence of the simulated expected value. Use simulations long enough! Some work in this direction should be done. I also stress that the optimization solver choice is a complex matter. The problem here had a lot of dimensions, with many local optima.
